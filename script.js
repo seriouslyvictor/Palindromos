@@ -19,3 +19,14 @@ function stopAnimation() {
 }
 
 startAnimation(3);
+
+function isPalindrome(word) {
+  const reverse = word.split("").reverse().join("");
+  let allMatch = false;
+  const letras = word.split("");
+
+  for (const [idx, letra] of letras.entries()) {
+    if (letra !== reverse[idx]) return allMatch;
+    else return (allMatch = true);
+  }
+}
