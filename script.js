@@ -3,6 +3,7 @@ let animationFrameId;
 const btnVerificar = document.getElementById("verificar")
 const inputLetras = document.querySelector("#palavra")
 const palindromos = []
+const palavrasAnteriores = ["teste"]
 let dadosApi;
 
 
@@ -45,6 +46,14 @@ const atualizarPainel = function () {
 
 }
 
+const verificarPalavraAnterior = function (palavra) {
+  if (palavrasAnteriores.includes(palavra)) {
+    return true
+  } else {
+    palavrasAnteriores.push(palavra)
+  }
+}
+
 
 const chamarApiDicionario = async function (url) {
   const requisição = `https://api.dicionario-aberto.net/word/${url}`;
@@ -84,6 +93,10 @@ btnVerificar.addEventListener("click", async () => {
     return
   } 
   const limpo = inputLetras.value.trim().toLowerCase();
+  if (verificarPalavraAnterior(limpo)) {
+    alert("Você já tentou essa palavra 👀")
+    return
+  }
   const palavraExistente = await chamarApiDicionario(limpo);
   console.log(palavraExistente)
   if (!palavraExistente) return;
