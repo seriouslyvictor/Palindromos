@@ -46,19 +46,26 @@ const atualizarPainel = function () {
 }
 
 
-const chamarApiDicionario = function (url) {
-  const requisição = `https://api.dicionario-aberto.net/word/${url}`
-  fetch(requisição)
-    .then(resposta => resposta.json())
-    .then(dados => {
-      if (!dados.length) {
-        throw new Error("Essa palavra não existe...")
-      }
-      dadosApi = dados
-    })
-    .catch(erro => alert(erro))
-    .finally(console.log("requisição finalizada"))
+const chamarApiDicionario = async function (url) {
+  const requisição = `https://api.dicionario-aberto.net/word/${url}`;
+  
+  try {
+    const resposta = await fetch(requisição);
+    const dados = await resposta.json();
+    
+    if (!dados.length) {
+      throw new Error("Essa palavra não existe...");
+    }
+    dadosApi = dados;
+    return true; // Word exists
+  } catch (erro) {
+    alert(erro.message); // Show the error message to the user
+    return false;
+  } finally {
+    console.log("requisição finalizada");
+  }
 }
+
 
 function isPalindrome(word) {
   const reverse = word.split("").reverse().join("");
@@ -71,7 +78,16 @@ function isPalindrome(word) {
   }
 }
 
-btnVerificar.addEventListener("click", () => {
-  if (isPalindrome(inputLetras.value)) btnVerificar.textContent = "✔"
+btnVerificar.addEventListener("click", async () => {
+   if (!inputLetras.value || inputLetras.value.length <= 2) {
+    alert("Digite uma palavra")
+    return
+  } 
+  const limpo = inputLetras.value.trim().toLowerCase();
+  const palavraExistente = await chamarApiDicionario(limpo);
+  console.log(palavraExistente)
+  if (!palavraExistente) return;
+
+  if (isPalindrome(limpo)) btnVerificar.textContent = "✔"
   else btnVerificar.textContent = "❌"
 })
