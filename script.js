@@ -43,7 +43,11 @@ const adicionarPalavra = function (palavra) {
 }
 
 const atualizarPainel = function () {
-
+  const scoreBoard = document.querySelector(".game--scoreboard")
+  const novoPalindromo =  document.createElement("div")
+  novoPalindromo.classList.add("item--scoreboard")
+  novoPalindromo.innerHTML = `<span class="sb--palavra">${palavraObj.palindromo}</span> <span class="sb--letras">${palavraObj.numLetras}</span> <span class="sb--data">${palavraObj.discovery}</span>`
+  scoreBoard.append(novoPalindromo);
 }
 
 const verificarPalavraAnterior = function (palavra) {
@@ -83,7 +87,11 @@ function isPalindrome(word) {
 
   for (const [idx, letra] of letras.entries()) {
     if (letra !== reverse[idx]) return allMatch;
-    else return (allMatch = true);
+    else {
+      adicionarPalavra(word)
+  
+      return allMatch = true
+    };
   }
 }
 
