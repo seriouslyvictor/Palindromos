@@ -33,7 +33,6 @@ const adicionarPalavra = function (palavra) {
   const hora = data.getHours();
   const minutos = data.getMinutes();
 
-  console.log(data)
   const palavraObj = {
     palindromo: palavra,
     numLetras: palavra.length,
@@ -44,10 +43,14 @@ const adicionarPalavra = function (palavra) {
 
 const atualizarPainel = function () {
   const scoreBoard = document.querySelector(".game--scoreboard")
-  const novoPalindromo =  document.createElement("div")
-  novoPalindromo.classList.add("item--scoreboard")
-  novoPalindromo.innerHTML = `<span class="sb--palavra">${palavraObj.palindromo}</span> <span class="sb--letras">${palavraObj.numLetras}</span> <span class="sb--data">${palavraObj.discovery}</span>`
-  scoreBoard.append(novoPalindromo);
+  scoreBoard.innerHTML = ''
+  palindromos.forEach(palin => {
+    const novoPalindromo = document.createElement("div")
+    novoPalindromo.classList.add("item--scoreboard")
+    novoPalindromo.innerHTML = `<span class="sb--palavra">${palin.palindromo.toUpperCase()}</span> <span class="sb--letras">${palin.numLetras}</span> <span class="sb--data">${palin.discovery}</span>`
+    scoreBoard.append(novoPalindromo);
+  })
+
 }
 
 const verificarPalavraAnterior = function (palavra) {
@@ -61,11 +64,11 @@ const verificarPalavraAnterior = function (palavra) {
 
 const chamarApiDicionario = async function (url) {
   const requisição = `https://api.dicionario-aberto.net/word/${url}`;
-  
+
   try {
     const resposta = await fetch(requisição);
     const dados = await resposta.json();
-    
+
     if (!dados.length) {
       throw new Error("Essa palavra não existe...");
     }
@@ -89,17 +92,16 @@ function isPalindrome(word) {
     if (letra !== reverse[idx]) return allMatch;
     else {
       adicionarPalavra(word)
-  
       return allMatch = true
     };
   }
 }
 
 btnVerificar.addEventListener("click", async () => {
-   if (!inputLetras.value || inputLetras.value.length <= 2) {
+  if (!inputLetras.value || inputLetras.value.length <= 2) {
     alert("Digite uma palavra")
     return
-  } 
+  }
   const limpo = inputLetras.value.trim().toLowerCase();
   if (verificarPalavraAnterior(limpo)) {
     alert("Você já tentou essa palavra 👀")
@@ -109,6 +111,9 @@ btnVerificar.addEventListener("click", async () => {
   console.log(palavraExistente)
   if (!palavraExistente) return;
 
-  if (isPalindrome(limpo)) btnVerificar.textContent = "✔"
+  if (isPalindrome(limpo)) {
+    btnVerificar.textContent = "✔"
+    atualizarPainel()
+  }
   else btnVerificar.textContent = "❌"
 })

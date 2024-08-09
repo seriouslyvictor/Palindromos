@@ -7,7 +7,6 @@
 
 body {
     font-family: "Rajdhani", sans-serif;
-    background: url(./Assets/space.jpg) no-repeat fixed;
     background-size: cover;
     height: 100vh;
     display: grid;
@@ -123,6 +122,7 @@ h1 {
     filter: blur(10px);
     z-index: -1;
 }
+
 /* botões */
 
 button {
