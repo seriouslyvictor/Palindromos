@@ -1,0 +1,13 @@
+.game--scoreboard {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #13131349;
+    min-width: 12.5rem;
+    max-width: 18.75rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+
+}

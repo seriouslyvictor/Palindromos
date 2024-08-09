@@ -2,7 +2,17 @@ let angulo = 0;
 let animationFrameId;
 const btnVerificar = document.getElementById("verificar")
 const inputLetras = document.querySelector("#palavra")
-const palindromos = []
+const palindromos = [{
+  palindromo: "ANA",
+  numLetras: 3,
+  discovery: `08/08/2024`
+},
+{
+  palindromo: "AMA",
+  numLetras: 3,
+  discovery: `07/01/2024`
+}
+]
 const palavrasAnteriores = ["teste"]
 let dadosApi;
 
@@ -25,18 +35,32 @@ function stopAnimation() {
 
 startAnimation(5);
 
-const adicionarPalavra = function (palavra) {
-  const data = new Date();
-  const dia = data.getDate();
-  const mes = data.getMonth();
-  const ano = data.getFullYear();
-  const hora = data.getHours();
-  const minutos = data.getMinutes();
+const formatarTempo = function (data) {
+  data = new Date(data)
+  const [dia, mes, ano] = [data.getDay(), data.getMonth(), data.getFullYear()]
+  const diasPassados = Math.floor((new Date() - data) / (1000 * 60 * 60 * 24))
+  switch (diasPassados) {
+    case 0:
+      return "Hoje"
+    case 1:
+      return "Ontem"
+    case 2:
+      return "2 Dias Atrás"
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      return "Essa semana"
+    default:
+      return `${dia}/${mes}/${ano}`;
+  }
+}
 
+const adicionarPalavra = function (palavra) {
   const palavraObj = {
     palindromo: palavra,
     numLetras: palavra.length,
-    discovery: `${dia}/${mes}/${ano} - ${hora}:${minutos}`,
+    discovery: new Date(),
   }
   palindromos.push(palavraObj)
 }
@@ -46,8 +70,8 @@ const atualizarPainel = function () {
   scoreBoard.innerHTML = ''
   palindromos.forEach(palin => {
     const novoPalindromo = document.createElement("div")
-    novoPalindromo.classList.add("item--scoreboard")
-    novoPalindromo.innerHTML = `<span class="sb--palavra">${palin.palindromo.toUpperCase()}</span> <span class="sb--letras">${palin.numLetras}</span> <span class="sb--data">${palin.discovery}</span>`
+    novoPalindromo.classList.add("sb--item")
+    novoPalindromo.innerHTML = `<span class="sb--palavra">${palin.palindromo.toUpperCase()}</span> <span class="sb--letras">${palin.numLetras}</span> <span class="sb--data">${formatarTempo(palin.discovery)}</span>`
     scoreBoard.append(novoPalindromo);
   })
 
