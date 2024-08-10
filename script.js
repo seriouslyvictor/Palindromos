@@ -2,20 +2,9 @@ let angulo = 0;
 let animationFrameId;
 const btnVerificar = document.getElementById("verificar")
 const inputLetras = document.querySelector("#palavra")
-const palindromos = [{
-  palindromo: "ANA",
-  numLetras: 3,
-  discovery: `08/08/2024`
-},
-{
-  palindromo: "AMA",
-  numLetras: 3,
-  discovery: `07/01/2024`
-}
-]
-const palavrasAnteriores = ["teste"]
+const palindromos = []
+const palavrasAnteriores = []
 let dadosApi;
-
 
 function animarGradiente(speed = 3) {
   angulo += speed;
@@ -33,7 +22,7 @@ function stopAnimation() {
     : (animationFrameId = null);
 }
 
-startAnimation(5);
+// startAnimation(5);
 
 const formatarTempo = function (data) {
   data = new Date(data)
@@ -74,7 +63,7 @@ const atualizarPainel = function () {
     novoPalindromo.innerHTML = `<span class="sb--palavra">${palin.palindromo.toUpperCase()}</span> <span class="sb--letras">${palin.numLetras}</span> <span class="sb--data">${formatarTempo(palin.discovery)}</span>`
     scoreBoard.append(novoPalindromo);
   })
-
+  scoreBoard.classList.add("aberto")
 }
 
 const verificarPalavraAnterior = function (palavra) {
