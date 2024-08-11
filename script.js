@@ -21,7 +21,7 @@ const resgatarDados = function () {
   const anterioresArray = JSON.parse(localStorage.getItem("anteriores")) || []
   storageArray.map(item => palindromos.push(item))
   anterioresArray.map(item => palavrasAnteriores.push(item))
-  palindromos ? atualizarPainel() : null
+  palindromos.length >= 1 ? atualizarPainel() : null
 }
 
 const formatarTempo = function (data) {
