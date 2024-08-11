@@ -1,0 +1,56 @@
+@media (max-width: 900px) {
+    .game--core {
+        min-width: unset;
+        max-width: 48rem;
+        height: fit-content;
+        gap: 2rem;
+    }
+
+    .gradient--text {
+        font-size: 2.5rem;
+    }
+
+    .char--box {
+        font-size: 2.5rem;
+        width: 100%;
+        height: 4rem;
+    }
+
+    button {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 2rem;
+    }
+
+    .game--scoreboard {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: 100%;
+        max-width: 100%;
+        height: fit-content;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .game--core {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 450px) {
+    .gradient--text {
+        font-size: 1.75rem;
+    }
+
+    .char--box {
+        font-size: 1.75rem;
+        height: 3rem;
+    }
+
+    button {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 1.5rem;
+    }
+}
