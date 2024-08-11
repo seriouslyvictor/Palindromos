@@ -6,23 +6,23 @@ const palindromos = []
 const palavrasAnteriores = []
 let dadosApi;
 
-function animarGradiente(speed = 3) {
-  angulo += speed;
-  document.documentElement.style.setProperty("--angulo", `${angulo}deg`);
-  animationFrameId = requestAnimationFrame(() => animarGradiente(speed));
-}
-function startAnimation(speed) {
-  stopAnimation();
-  animarGradiente(speed);
+const startSpinner = function (spinner) {
+  spinner.style.borderColor = "transparent"
+  spinner.style.animationPlayState = "running"
 }
 
-function stopAnimation() {
-  animationFrameId
-    ? cancelAnimationFrame(animationFrameId)
-    : (animationFrameId = null);
+const stopSpinner = function (spinner) {
+  spinner.style.borderColor = "white"
+  spinner.style.animationPlayState = "paused"
 }
 
-// startAnimation(5);
+const resgatarDados = function () {
+  const storageArray = JSON.parse(localStorage.getItem('encontradas')) || []
+  const anterioresArray = JSON.parse(localStorage.getItem("anteriores")) || []
+  storageArray.map(item => palindromos.push(item))
+  anterioresArray.map(item => palavrasAnteriores.push(item))
+  palindromos ? atualizarPainel() : null
+}
 
 const formatarTempo = function (data) {
   data = new Date(data)
@@ -64,6 +64,7 @@ const atualizarPainel = function () {
     scoreBoard.append(novoPalindromo);
   })
   scoreBoard.classList.add("aberto")
+  localStorage.setItem("encontradas", JSON.stringify(palindromos))
 }
 
 const verificarPalavraAnterior = function (palavra) {
@@ -71,13 +72,14 @@ const verificarPalavraAnterior = function (palavra) {
     return true
   } else {
     palavrasAnteriores.push(palavra)
+    localStorage.setItem("anteriores", JSON.stringify(palavrasAnteriores));
   }
 }
 
 
 const chamarApiDicionario = async function (url) {
   const requisição = `https://api.dicionario-aberto.net/word/${url}`;
-
+  startSpinner(btnVerificar)
   try {
     const resposta = await fetch(requisição);
     const dados = await resposta.json();
@@ -92,25 +94,11 @@ const chamarApiDicionario = async function (url) {
     return false;
   } finally {
     console.log("requisição finalizada");
+    setTimeout(() => { stopSpinner(btnVerificar) }, 600)
   }
 }
 
-
-function isPalindrome(word) {
-  const reverse = word.split("").reverse().join("");
-  let allMatch = false;
-  const letras = word.split("");
-
-  for (const [idx, letra] of letras.entries()) {
-    if (letra !== reverse[idx]) return allMatch;
-    else {
-      adicionarPalavra(word)
-      return allMatch = true
-    };
-  }
-}
-
-btnVerificar.addEventListener("click", async () => {
+const verificarAcerto = async () => {
   if (!inputLetras.value || inputLetras.value.length <= 2) {
     alert("Digite uma palavra")
     return
@@ -118,15 +106,46 @@ btnVerificar.addEventListener("click", async () => {
   const limpo = inputLetras.value.trim().toLowerCase();
   if (verificarPalavraAnterior(limpo)) {
     alert("Você já tentou essa palavra 👀")
+    inputLetras.focus()
     return
   }
   const palavraExistente = await chamarApiDicionario(limpo);
-  console.log(palavraExistente)
   if (!palavraExistente) return;
 
   if (isPalindrome(limpo)) {
     btnVerificar.textContent = "✔"
+    setTimeout(() => { btnVerificar.textContent = "?" }, 1500)
+    inputLetras.value = ""
     atualizarPainel()
   }
-  else btnVerificar.textContent = "❌"
+  else {
+    btnVerificar.textContent = "❌"
+    setTimeout(() => { btnVerificar.textContent = "?" }, 1500)
+    inputLetras.focus()
+  }
+
+}
+
+function isPalindrome(word) {
+  const reverse = word.split("").reverse().join("");
+  let allMatch = true;
+  const letras = word.split("");
+
+  for (const [idx, letra] of letras.entries()) {
+    if (letra !== reverse[idx]) {
+      allMatch = false;
+      break
+    }
+  }
+  allMatch ? adicionarPalavra(word) : null;
+  return allMatch;
+}
+
+btnVerificar.addEventListener("click", verificarAcerto)
+inputLetras.addEventListener("keypress", (e) => {
+  console.log(e)
+  e.key === "Enter" ? verificarAcerto() : null
 })
+
+
+document.addEventListener("DOMContentLoaded", resgatarDados)

@@ -1,9 +1,13 @@
-:root {
-    --angulo: -45deg;
-    --angulo--border: 0deg;
+@property --bg-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: "<angle>";
 }
 
-
+:root {
+    --bg-angle: 0deg;
+    --angulo--border: 0deg;
+}
 
 body {
     font-family: "Rajdhani", sans-serif;
@@ -37,9 +41,9 @@ body {
 }
 
 .char--box {
-    font-size: 6rem;
     position: relative;
     background-color: hsl(244, 47%, 14%);
+    font-size: 6rem;
     width: 32rem;
     height: 6.625rem;
     color: white;
@@ -82,7 +86,7 @@ h1 {
     z-index: -2;
     position: absolute;
     inset: 0;
-    background: linear-gradient(var(--angulo), #fc00ff 0%, #00dbde 100%);
+    background: linear-gradient(var(--bg-angle), oklch(0.67 0.3 328) 0%, oklch(0.81 0.2 230) 100%);
     filter: blur(20px);
 }
 
@@ -97,7 +101,7 @@ h1 {
     padding: .25rem;
     width: 100%;
     height: 100%;
-    background: linear-gradient(var(--angulo), #e81cff 0%, #40c9ff 100%);
+    background: linear-gradient(var(--bg-angle), oklch(0.67 0.3 328) 0%, oklch(0.81 0.2 230) 100%);
     z-index: -2;
     pointer-events: none;
 }
@@ -129,12 +133,24 @@ h1 {
 button {
     all: unset;
     border: 2px solid white;
-    width: 64px;
-    height: 64px;
-    font-size: 4rem;
+    width: 56px;
+    height: 56px;
+    font-size: 3rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    background:
+        conic-gradient(from var(--bg-angle), hsl(244, 47%, 14%), hsl(244, 47%, 14%)) padding-box,
+        conic-gradient(from var(--bg-angle), oklch(0.67 0.3 328) 0%, oklch(0.81 0.2 230) 100%) border-box;
+    border: 2px solid white;
+    animation: spin 0.7s linear infinite paused;
+
+}
+
+@keyframes spin {
+    to {
+        --bg-angle: 360deg;
+    }
 }
